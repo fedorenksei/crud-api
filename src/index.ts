@@ -1,10 +1,9 @@
+import { handle } from './controller';
 import http from 'node:http';
 const port = process.env.PORT;
 
 const server = http.createServer((req, res) => {
-  const { method, url } = req;
-  const str = `Received ${method} request for ${url}`;
-  res.writeHead(200, { 'Content-Type': 'text/plain' }).end(str);
+  handle(req, res);
 });
 
 server.listen(port, () => {
