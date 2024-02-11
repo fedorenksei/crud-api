@@ -1,12 +1,12 @@
-import { database } from '../database';
 import { IncomingMessage } from 'node:http';
-import { usersPath } from '../utils/constants';
+import { getNewUserData, getUserId } from 'utils/validation';
+import { database } from '../database';
 import {
   InvalidUserIdError,
   NonExistentEndpointError,
   RequiredUserFieldsError,
 } from '../utils/errors';
-import { EndpointData, NewUserData } from '../utils/types';
+import { EndpointData } from '../utils/types';
 import { addUser, deleteUser, getUser, getUsers, updateUser } from './handlers';
 
 const endpoints: EndpointData[] = [
@@ -78,26 +78,4 @@ export function parseRequest(
   }
 
   return () => endpoint.handler();
-}
-
-function getNewUserData(body: string): NewUserData | false {
-  try {
-    const data = JSON.parse(body);
-    if (
-      data instanceof Object &&
-      typeof data.username === 'string' &&
-      typeof data.age === 'number' &&
-      Array.isArray(data.hobbies) &&
-      data.hobbies.every((el: string) => typeof el === 'string')
-    )
-      return data;
-    return false;
-  } catch {
-    return false;
-  }
-}
-
-function getUserId(url: string) {
-  const userIdMatch = url.match(new RegExp(`${usersPath}/([^/]+)`));
-  return userIdMatch?.[1];
 }
