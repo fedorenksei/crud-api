@@ -6,19 +6,27 @@ type HandlerResult = {
 export type EndpointData =
   | {
       method: string;
-      arg: 'none' | 'userId';
-      handler: (userId?: string) => HandlerResult;
+      arg: 'none';
+      handler: () => HandlerResult;
+    }
+  | {
+      method: string;
+      arg: 'userId';
+      handler: (userId: string) => HandlerResult;
     }
   | {
       method: string;
       arg: 'newUserData';
       newUserHandler: (newUserData: NewUserData) => HandlerResult;
+    }
+  | {
+      method: string;
+      arg: 'both';
+      updateUserHandler: (args: {
+        userId: string;
+        data: NewUserData;
+      }) => HandlerResult;
     };
-
-// export type RequestData = {
-//   handler: RequestHandler;
-//   userId?: string;
-// };
 
 export type NewUserData = {
   id: string;

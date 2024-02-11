@@ -1,5 +1,5 @@
-import { NewUserData, UserData } from 'utils/types';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, validate as validateUuid } from 'uuid';
+import { NewUserData, UserData } from '../utils/types';
 
 class UsersDatabase {
   private UsersMap: Map<string, UserData>;
@@ -26,6 +26,23 @@ class UsersDatabase {
     if (!this.UsersMap.has(id)) return false;
     this.UsersMap.delete(id);
     return true;
+  }
+
+  public updateUser({
+    id,
+    data: { username, age, hobbies },
+  }: {
+    id: string;
+    data: NewUserData;
+  }) {
+    if (!this.UsersMap.has(id)) return false;
+    const data = { id, username, age, hobbies };
+    this.UsersMap.set(id, data);
+    return data;
+  }
+
+  public validateUserId(id: string) {
+    return validateUuid(id);
   }
 }
 
