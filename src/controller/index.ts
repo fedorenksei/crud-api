@@ -1,19 +1,26 @@
-import { IncomingMessage, ServerResponse } from 'node:http';
+import http from 'node:http';
 import { respondOk, respondWithError } from '../utils/response';
 import { parseRequest } from './endpoints';
 
-type Args = {
-  req: IncomingMessage;
-  body: string;
-  res: ServerResponse;
-};
-
-export function handleRequest({ req, body, res }: Args) {
-  try {
-    const operation = parseRequest(req, body);
-    const result = operation();
-    respondOk(res, result);
-  } catch (error) {
-    respondWithError(res, error);
-  }
+export function startServer(port: string) {
+  http
+    .createServer((request, response) => {
+      let body = '';
+      request
+        .on('data', (chunk) => {
+          body += chunk;
+        })
+        .on('end', () => {
+          try {
+            const operation = parseRequest(request, body);
+            const result = operation();
+            respondOk(response, result);
+          } catch (error) {
+            respondWithError(response, error);
+          }
+        });
+    })
+    .listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
 }
