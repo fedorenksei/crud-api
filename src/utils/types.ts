@@ -1,4 +1,4 @@
-type HandlerResult = {
+export type HandlerResult = {
   code: number;
   data: NonNullable<unknown>;
 };
