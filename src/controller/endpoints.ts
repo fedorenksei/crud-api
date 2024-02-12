@@ -1,5 +1,5 @@
 import { IncomingMessage } from 'node:http';
-import { getNewUserData, getUserId } from 'utils/validation';
+import { getNewUserData, getUserId } from '../utils/validation';
 import { database } from '../database';
 import {
   InvalidUserIdError,
